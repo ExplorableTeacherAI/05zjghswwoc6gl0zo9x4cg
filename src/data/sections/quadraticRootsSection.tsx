@@ -49,6 +49,9 @@ const VERTEX_Y_MAX = 4;
 
 const scale = makeScale({ xMin: -3, xMax: 8, yMin: -9, yMax: 7 });
 
+/** The curve itself is drawn in a soft red, distinct from the teal drag handle. */
+const CURVE = "#ef4444";
+
 /** Vertex form (x - h)^2 + k written out as x^2 + bx + c = 0. */
 function expandedEquation(h: number, k: number): string {
     const b = -2 * h;
@@ -141,7 +144,7 @@ function ParabolaDrawing() {
                     <polyline
                         points={samples.join(" ")}
                         fill="none"
-                        stroke={ACCENT}
+                        stroke={CURVE}
                         strokeWidth="3"
                         strokeLinecap="round"
                         strokeLinejoin="round"
