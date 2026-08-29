@@ -81,84 +81,221 @@ export interface VariableDefinition {
  *    { defaultValue: { x: 5, y: 10 }, type: 'object', schema: '{ x: number, y: number }' }
  */
 export const variableDefinitions: Record<string, VariableDefinition> = {
-    // ========================================
-    // ADD YOUR VARIABLES HERE
-    // ========================================
-
-    // Uncomment and modify these examples for your lesson:
-
-    /*
-    // ─────────────────────────────────────────
-    // NUMBER - Use with sliders
-    // ─────────────────────────────────────────
-    myValue: {
-        defaultValue: 5,
+    // ─────────────────────────────────────────────────────────────
+    // Section 2 — Where the Line Hits Zero
+    // ─────────────────────────────────────────────────────────────
+    lineStartHeight: {
+        defaultValue: 6,
         type: 'number',
-        label: 'My Value',
-        description: 'A number that controls something',
-        unit: 'm',           // optional unit display
-        min: 0,
-        max: 10,
+        label: 'Starting height',
+        description: 'Height of the drone above the platform at time zero (the intercept c)',
+        unit: 'm',
+        min: -8,
+        max: 6,
         step: 0.5,
+        color: '#62D0AD',
     },
-
-    // ─────────────────────────────────────────
-    // TEXT - Free text input
-    // ─────────────────────────────────────────
-    lessonTitle: {
-        defaultValue: 'My Lesson',
+    lineClimbRate: {
+        defaultValue: -2,
+        type: 'number',
+        label: 'Climb rate',
+        description: 'Metres gained per second (the gradient m); negative means descending',
+        unit: 'm/s',
+        min: -3,
+        max: 3,
+        step: 0.5,
+        color: '#62D0AD',
+    },
+    lineHighlight: {
+        defaultValue: '',
         type: 'text',
-        label: 'Lesson Title',
-        description: 'The title of your lesson',
-        placeholder: 'Enter a title...',
+        label: 'Line figure highlight',
+        description: 'Shared highlight key linking prose to the straight-line figure',
+        color: '#8E90F5',
+        bgColor: 'rgba(142, 144, 245, 0.22)',
     },
-
-    // ─────────────────────────────────────────
-    // SELECT - Dropdown with options
-    // ─────────────────────────────────────────
-    difficulty: {
-        defaultValue: 'medium',
+    answerLineRoot: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Line root answer',
+        description: 'Student answer for the solution of -x + 4 = 0',
+        placeholder: '???',
+        correctAnswer: '4',
+        color: '#8E90F5',
+    },
+    answerCrossesAxis: {
+        defaultValue: '',
         type: 'select',
-        label: 'Difficulty',
-        description: 'The difficulty level of the lesson',
-        options: ['easy', 'medium', 'hard', 'expert'],
+        label: 'Which axis answer',
+        description: 'Student answer naming the axis a solution is read from',
+        placeholder: '???',
+        correctAnswer: 'x-axis',
+        options: ['x-axis', 'y-axis'],
+        color: '#8E90F5',
     },
 
-    // ─────────────────────────────────────────
-    // BOOLEAN - Toggle switch
-    // ─────────────────────────────────────────
-    showHints: {
-        defaultValue: true,
+    // ─────────────────────────────────────────────────────────────
+    // Section 3 — Checking It Without the Picture
+    // ─────────────────────────────────────────────────────────────
+    testValue: {
+        defaultValue: 1,
+        type: 'number',
+        label: 'Test value',
+        description: 'The value of x fed into the expression 3x + 12',
+        min: -8,
+        max: 8,
+        step: 0.5,
+        color: '#62D0AD',
+    },
+    machineHighlight: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Machine figure highlight',
+        description: 'Shared highlight key linking prose to the substitution machine',
+        color: '#8E90F5',
+        bgColor: 'rgba(142, 144, 245, 0.22)',
+    },
+    answerMachineRoot: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Machine root answer',
+        description: 'Student answer for the solution of 3x + 12 = 0',
+        placeholder: '???',
+        correctAnswer: ['-4', '- 4', 'x = -4'],
+        color: '#8E90F5',
+    },
+    answerSolveFiveX: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Solve 5x - 20 answer',
+        description: 'Student answer for the solution of 5x - 20 = 0',
+        placeholder: '???',
+        correctAnswer: ['4', 'x = 4'],
+        color: '#8E90F5',
+    },
+
+    // ─────────────────────────────────────────────────────────────
+    // Section 4 — When the Line Bends
+    // ─────────────────────────────────────────────────────────────
+    vertexX: {
+        defaultValue: 3,
+        type: 'number',
+        label: 'Lowest point across',
+        description: 'Horizontal position of the parabola vertex',
+        min: 0,
+        max: 4,
+        step: 1,
+        color: '#62D0AD',
+    },
+    vertexY: {
+        defaultValue: -4,
+        type: 'number',
+        label: 'Lowest point height',
+        description: 'Height of the parabola vertex above the platform',
+        unit: 'm',
+        min: -6,
+        max: 4,
+        step: 1,
+        color: '#62D0AD',
+    },
+    parabolaHighlight: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Parabola figure highlight',
+        description: 'Shared highlight key linking prose to the curve figure',
+        color: '#8E90F5',
+        bgColor: 'rgba(142, 144, 245, 0.22)',
+    },
+    answerRootCount: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Number of solutions answer',
+        description: 'Student answer for how many solutions a curve above the axis has',
+        placeholder: '???',
+        correctAnswer: 'none',
+        options: ['none', 'one', 'two'],
+        color: '#8E90F5',
+    },
+    answerOtherRoot: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Second root answer',
+        description: 'Student answer for the second solution of a symmetric parabola',
+        placeholder: '???',
+        correctAnswer: ['6', 'x = 6'],
+        color: '#8E90F5',
+    },
+
+    // ─────────────────────────────────────────────────────────────
+    // Section 5 — Two Answers, One Equation
+    // ─────────────────────────────────────────────────────────────
+    hunterX: {
+        defaultValue: -2.5,
+        type: 'number',
+        label: 'Probe position',
+        description: 'The x value being probed in the hidden-curve hunt',
+        min: -2.6,
+        max: 4.6,
+        step: 0.1,
+        color: '#62D0AD',
+    },
+    foundRootLeft: {
+        defaultValue: false,
         type: 'boolean',
-        label: 'Show Hints',
-        description: 'Toggle to show or hide hints',
+        label: 'Left root found',
+        description: 'Whether the student has landed on the left-hand solution',
     },
-
-    // ─────────────────────────────────────────
-    // ARRAY - List of numbers
-    // ─────────────────────────────────────────
-    dataPoints: {
-        defaultValue: [1, 4, 9, 16, 25],
-        type: 'array',
-        label: 'Data Points',
-        description: 'Y-values for plotting a graph',
+    foundRootRight: {
+        defaultValue: false,
+        type: 'boolean',
+        label: 'Right root found',
+        description: 'Whether the student has landed on the right-hand solution',
     },
-
-    // ─────────────────────────────────────────
-    // OBJECT - Complex structured data
-    // ─────────────────────────────────────────
-    graphSettings: {
-        defaultValue: { 
-            xMin: -10, 
-            xMax: 10, 
-            showGrid: true 
-        },
-        type: 'object',
-        label: 'Graph Settings',
-        description: 'Configuration for the graph display',
-        schema: '{ xMin: number, xMax: number, showGrid: boolean }',
+    hunterResetCount: {
+        defaultValue: 0,
+        type: 'number',
+        label: 'Hunt reset count',
+        description: 'Increments whenever the root hunt figure is reset, clearing the trail',
+        min: 0,
+        max: 999,
+        step: 1,
     },
-    */
+    hunterHighlight: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Hunt figure highlight',
+        description: 'Shared highlight key linking prose to the root hunt figure',
+        color: '#8E90F5',
+        bgColor: 'rgba(142, 144, 245, 0.22)',
+    },
+    answerMixedLinear: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Mixed practice linear answer',
+        description: 'Student answer for the solution of 2x - 10 = 0',
+        placeholder: '???',
+        correctAnswer: ['5', 'x = 5'],
+        color: '#8E90F5',
+    },
+    answerMixedQuadratic: {
+        defaultValue: '',
+        type: 'text',
+        label: 'Mixed practice quadratic answer',
+        description: 'Student answer for the negative solution of x squared minus 4 equals zero',
+        placeholder: '???',
+        correctAnswer: ['-2', '- 2', 'x = -2'],
+        color: '#8E90F5',
+    },
+    answerHowManyLinear: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Linear solution count answer',
+        description: 'Student answer for how many times a sloping straight line crosses zero',
+        placeholder: '???',
+        correctAnswer: 'once',
+        options: ['never', 'once', 'twice'],
+        color: '#8E90F5',
+    },
 };
 
 /**
