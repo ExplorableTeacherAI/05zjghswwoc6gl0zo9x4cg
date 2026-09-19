@@ -22,6 +22,13 @@ export const GRID = "#E2E8F0";
 export const ACCENT = "#62D0AD";
 export const ANSWER = "#8E90F5";
 
+// One quantity, one colour, in every figure and every formula of the lesson.
+export const HEIGHT_HUE = ACCENT;    // a height / the value of the expression (line, bar, probe dot)
+export const ROOT_HUE = ANSWER;      // a solution: where the height is exactly zero
+export const INPUT_HUE = "#F7B23B";  // the value of x being tried (machine marker, hunt probe)
+export const RATE_HUE = "#F8A0CD";   // the climb rate (gradient term, tilt handle)
+export const CURVE_HUE = "#ef4444";  // a quadratic curve and its expression
+
 export interface PlotDomain {
     xMin: number;
     xMax: number;

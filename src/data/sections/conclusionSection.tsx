@@ -1,7 +1,7 @@
 import { type ReactElement } from "react";
 import { StackLayout } from "@/components/layouts";
 import { Block } from "@/components/templates";
-import { EditableH2, EditableParagraph } from "@/components/atoms";
+import { EditableH2, EditableParagraph, InlineTooltip } from "@/components/atoms";
 
 export const conclusionSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-conclusion-heading" maxWidth="xl">
@@ -29,7 +29,25 @@ export const conclusionSectionBlocks: ReactElement[] = [
                 The two algebra moves you practised are simply a faster route to the same
                 place, and they still work when nobody hands you a picture. Next comes
                 the machinery for curves that will not give their solutions up so easily,
-                where factorising and the quadratic formula do the hunting for you.
+                where{" "}
+                <InlineTooltip
+                    id="tooltip-conclusion-factorising"
+                    tooltip="Factorising means rewriting an expression as brackets multiplied together."
+                    color="#64748B"
+                    bgColor="rgba(100, 116, 139, 0.14)"
+                >
+                    factorising
+                </InlineTooltip>{" "}
+                and{" "}
+                <InlineTooltip
+                    id="tooltip-conclusion-quadratic-formula"
+                    tooltip="The quadratic formula gives the solutions of any quadratic equation straight from its three numbers."
+                    color="#64748B"
+                    bgColor="rgba(100, 116, 139, 0.14)"
+                >
+                    the quadratic formula
+                </InlineTooltip>{" "}
+                do the hunting for you.
             </EditableParagraph>
         </Block>
     </StackLayout>,

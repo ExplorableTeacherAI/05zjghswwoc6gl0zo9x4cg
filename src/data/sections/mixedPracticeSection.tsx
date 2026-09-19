@@ -5,6 +5,7 @@ import {
     EditableH2,
     EditableParagraph,
     InlineLinkedHighlight,
+    InlineFormula,
     InlineClozeInput,
     InlineClozeChoice,
     InlineFeedback,
@@ -22,10 +23,12 @@ import {
 import {
     ACCENT,
     ANSWER,
+    CURVE_HUE,
     HandleShadow,
     INK,
     INK_QUIET,
     INK_STRUCTURE,
+    INPUT_HUE,
     PLOT_BOTTOM,
     PLOT_LEFT,
     PLOT_RIGHT,
@@ -129,7 +132,9 @@ function RootHuntDrawing() {
 
             <g fontSize="13" style={{ fontVariantNumeric: "tabular-nums" }}>
                 <text x="32" y="30" fill={INK} opacity={dim}>
-                    {`x² - 2x - 3 = ${fmt1(value)}`}
+                    <tspan fill={CURVE_HUE} fontWeight="600">{"x² - 2x - 3"}</tspan>
+                    <tspan>{" = "}</tspan>
+                    <tspan fill={ACCENT} fontWeight="600">{fmt1(value)}</tspan>
                 </text>
                 <text x="528" y="30" fill={ANSWER} textAnchor="end" fontWeight="600">
                     {bothFound ? "both solutions found" : `${foundCount} of 2 found`}
@@ -151,7 +156,7 @@ function RootHuntDrawing() {
                     <polyline
                         points={samples.join(" ")}
                         fill="none"
-                        stroke={ACCENT}
+                        stroke={CURVE_HUE}
                         strokeWidth="3"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -235,7 +240,7 @@ function RootHuntDrawing() {
 
             {/* The draggable probe, riding the x-axis */}
             <g opacity={dim} style={{ transition: "opacity 150ms ease-out" }}>
-                <circle cx={probeX} cy={axisY} r="10" fill={ACCENT} filter="url(#root-hunt-handle-shadow)" />
+                <circle cx={probeX} cy={axisY} r="10" fill={INPUT_HUE} filter="url(#root-hunt-handle-shadow)" />
                 <circle
                     cx={probeX}
                     cy={axisY}
@@ -252,7 +257,7 @@ function RootHuntDrawing() {
                     onPointerCancel={() => setDragging(false)}
                 />
                 <text x="32" y={VIEW_HEIGHT - 8} fontSize="11" fill={INK_STRUCTURE}>
-                    drag the teal probe left and right along the axis
+                    drag the amber probe left and right along the axis
                 </text>
             </g>
         </svg>
@@ -271,7 +276,7 @@ function RootHuntFigure() {
                 setVar("hunterHighlight", "");
                 setVar("hunterResetCount", Date.now());
             }}
-            caption="The curve for x² - 2x - 3 is hidden. Drag the teal probe and the dot shows the height at that value of x, so pin both places where the height is exactly zero."
+            caption="The curve for x² - 2x - 3 is hidden. Drag the amber probe and the teal dot shows the height at that value of x, so pin both places where the height is exactly zero."
         >
             <RootHuntDrawing />
             <InteractionHintSequence
@@ -279,7 +284,8 @@ function RootHuntFigure() {
                 steps={[
                     {
                         gesture: "drag-horizontal",
-                        label: "Drag the teal probe right and watch the height fall",
+                        label: "Drag the amber probe right and watch the height fall",
+                        color: INPUT_HUE,
                         position: { x: "15%", y: "64%" },
                         dragPath: {
                             type: "line",
@@ -307,8 +313,14 @@ export const mixedPracticeSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-root-hunt-setup" maxWidth="xl">
         <Block id="root-hunt-setup" padding="sm">
             <EditableParagraph id="para-root-hunt-setup" blockId="root-hunt-setup">
-                This flight comes with the curve switched off. Drag the teal probe along
-                the axis and the dot shows how high x² - 2x - 3 really is at that moment.
+                This flight comes with the curve switched off. Drag the amber probe along
+                the axis and the teal dot shows how high{" "}
+                <InlineFormula
+                    id="formula-root-hunt-setup-expression"
+                    latex="\clr{curve}{x^2 - 2x - 3}"
+                    colorMap={{ curve: "#ef4444" }}
+                />{" "}
+                really is at that moment.
                 Pin both places where the height lands on exactly zero.
             </EditableParagraph>
         </Block>
@@ -340,8 +352,13 @@ export const mixedPracticeSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-root-hunt-practice-linear" maxWidth="xl">
         <Block id="root-hunt-practice-linear" padding="sm">
             <EditableParagraph id="para-root-hunt-practice-linear" blockId="root-hunt-practice-linear">
-                Back to straight lines for a moment. The graph of 2x - 10 meets zero at
-                x ={" "}
+                Back to straight lines for a moment. The graph of{" "}
+                <InlineFormula
+                    id="formula-root-hunt-practice-linear-expression"
+                    latex="2\clr{input}{x} - 10"
+                    colorMap={{ input: "#F7B23B" }}
+                />{" "}
+                meets zero at x ={" "}
                 <InlineFeedback
                     varName="answerMixedLinear"
                     correctValue={["5", "x = 5"]}
@@ -365,8 +382,19 @@ export const mixedPracticeSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-root-hunt-practice-quadratic" maxWidth="xl">
         <Block id="root-hunt-practice-quadratic" padding="sm">
             <EditableParagraph id="para-root-hunt-practice-quadratic" blockId="root-hunt-practice-quadratic">
-                The curve x² - 4 dips below the axis and comes back, meeting zero at
-                x = 2 and again at x ={" "}
+                The curve{" "}
+                <InlineFormula
+                    id="formula-root-hunt-practice-quadratic-expression"
+                    latex="\clr{curve}{x^2 - 4}"
+                    colorMap={{ curve: "#ef4444" }}
+                />{" "}
+                dips below the axis and comes back, meeting zero at{" "}
+                <InlineFormula
+                    id="formula-root-hunt-practice-quadratic-root"
+                    latex="\clr{root}{x = 2}"
+                    colorMap={{ root: "#8E90F5" }}
+                />{" "}
+                and again at x ={" "}
                 <InlineFeedback
                     varName="answerMixedQuadratic"
                     correctValue={["-2", "- 2", "x = -2"]}

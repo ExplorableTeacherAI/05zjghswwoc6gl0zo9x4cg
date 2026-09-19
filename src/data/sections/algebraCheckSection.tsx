@@ -5,6 +5,8 @@ import {
     EditableH2,
     EditableParagraph,
     InlineLinkedHighlight,
+    InlineFormula,
+    InlineTrigger,
     InlineClozeInput,
     InlineFeedback,
     InteractionHintSequence,
@@ -17,7 +19,7 @@ import {
     clozePropsFromDefinition,
     linkedHighlightPropsFromDefinition,
 } from "../variables";
-import { ACCENT, ANSWER, HandleShadow, INK, INK_QUIET, INK_STRUCTURE, snap, VIEW_WIDTH } from "./equationsPlot";
+import { ACCENT, ANSWER, HandleShadow, INK, INK_QUIET, INK_STRUCTURE, INPUT_HUE, snap, VIEW_WIDTH } from "./equationsPlot";
 
 // ── Domain model: the expression the machine evaluates ───────────────────────
 
@@ -92,9 +94,11 @@ function SubstitutionMachineDrawing() {
             {/* Live substitution — the prerequisite skill, shown in full */}
             <g fontSize="15" style={{ fontVariantNumeric: "tabular-nums" }}>
                 <text x="32" y="36" fill={INK}>
-                    {`${COEFFICIENT} × (${x.toFixed(1)}) + ${CONSTANT} =`}
+                    <tspan>{`${COEFFICIENT} × (`}</tspan>
+                    <tspan fill={INPUT_HUE} fontWeight="600">{x.toFixed(1)}</tspan>
+                    <tspan>{`) + ${CONSTANT} =`}</tspan>
                 </text>
-                <text x="222" y="36" fill={isZero ? ANSWER : INK} fontWeight="600">
+                <text x="222" y="36" fill={isZero ? ANSWER : ACCENT} fontWeight="600">
                     {value.toFixed(1)}
                 </text>
                 <text x="528" y="36" textAnchor="end" fontSize="13" fill={isZero ? ANSWER : INK_STRUCTURE} fontWeight={isZero ? 600 : 400}>
@@ -136,7 +140,7 @@ function SubstitutionMachineDrawing() {
                     textAnchor={value >= 0 ? "start" : "end"}
                     fontSize="13"
                     fontWeight="600"
-                    fill={isZero ? ANSWER : INK}
+                    fill={isZero ? ANSWER : ACCENT}
                     style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                     {value.toFixed(1)}
@@ -195,7 +199,7 @@ function SubstitutionMachineDrawing() {
                     </text>
                 ))}
                 <text x="32" y={MACHINE_HEIGHT - 12} fontSize="11" fill={INK_STRUCTURE}>
-                    drag the teal marker to try a value of x
+                    drag the amber marker to try a value of x
                 </text>
             </g>
 
@@ -206,19 +210,19 @@ function SubstitutionMachineDrawing() {
                     y1={BAR_TOP + BAR_HEIGHT + 22}
                     x2={markerX}
                     y2={NUMBER_LINE_Y - 12}
-                    stroke={ACCENT}
+                    stroke={INPUT_HUE}
                     strokeWidth="2"
                     strokeDasharray="4 5"
                     strokeLinecap="round"
                 />
-                <circle cx={markerX} cy={NUMBER_LINE_Y} r="10" fill={ACCENT} filter="url(#algebra-check-handle-shadow)" />
+                <circle cx={markerX} cy={NUMBER_LINE_Y} r="10" fill={INPUT_HUE} filter="url(#algebra-check-handle-shadow)" />
                 <text
                     x={markerX}
                     y={NUMBER_LINE_Y + 40}
                     textAnchor="middle"
                     fontSize="12"
                     fontWeight="600"
-                    fill={ACCENT}
+                    fill={INPUT_HUE}
                     style={{ fontVariantNumeric: "tabular-nums" }}
                 >
                     {`x = ${x.toFixed(1)}`}
@@ -259,7 +263,8 @@ function SubstitutionMachineFigure() {
                 steps={[
                     {
                         gesture: "drag-horizontal",
-                        label: "Drag the teal marker left along the number line",
+                        label: "Drag the amber marker left along the number line",
+                        color: INPUT_HUE,
                         position: { x: "60%", y: "79%" },
                         dragPath: {
                             type: "line",
@@ -288,8 +293,14 @@ export const algebraCheckSectionBlocks: ReactElement[] = [
         <Block id="algebra-check-setup" padding="sm">
             <EditableParagraph id="para-algebra-check-setup" blockId="algebra-check-setup">
                 A graph is quick, but you will not always be handed one. Behind every
-                line sits an expression you can test by hand, so drag the teal marker to
-                feed a value into 3x + 12 and watch the{" "}
+                line sits an expression you can test by hand, so drag the amber marker to
+                feed a value into{" "}
+                <InlineFormula
+                    id="formula-algebra-check-setup-expression"
+                    latex="3\clr{input}{x} + 12"
+                    colorMap={{ input: "#F7B23B" }}
+                />{" "}
+                and watch the{" "}
                 <InlineLinkedHighlight
                     varName="machineHighlight"
                     highlightId="bar"
@@ -311,8 +322,13 @@ export const algebraCheckSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-algebra-check-practice-find" maxWidth="xl">
         <Block id="algebra-check-practice-find" padding="sm">
             <EditableParagraph id="para-algebra-check-practice-find" blockId="algebra-check-practice-find">
-                Hunt until the bar vanishes. The one value of x that makes 3x + 12 equal
-                zero is x ={" "}
+                Hunt until the bar vanishes. The one value of x that makes{" "}
+                <InlineFormula
+                    id="formula-algebra-check-find-expression"
+                    latex="3\clr{input}{x} + 12"
+                    colorMap={{ input: "#F7B23B" }}
+                />{" "}
+                equal zero is x ={" "}
                 <InlineFeedback
                     varName="answerMachineRoot"
                     correctValue={["-4", "- 4", "x = -4"]}
@@ -350,7 +366,16 @@ export const algebraCheckSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-algebra-check-reflect" maxWidth="xl">
         <Block id="algebra-check-reflect" padding="sm">
             <EditableParagraph id="para-algebra-check-reflect" blockId="algebra-check-reflect">
-                Landing exactly on zero by dragging is fiddly, and algebra gets there in
+                <InlineTrigger
+                    id="trigger-algebra-check-land-on-zero"
+                    varName="testValue"
+                    value={-4}
+                    color="#8E90F5"
+                    bgColor="rgba(142, 144, 245, 0.15)"
+                >
+                    Landing exactly on zero
+                </InlineTrigger>{" "}
+                by dragging is fiddly, and algebra gets there in
                 two moves. Take the 12 off both sides, then share what is left equally
                 between the 3 lots of x.
             </EditableParagraph>
@@ -359,14 +384,31 @@ export const algebraCheckSectionBlocks: ReactElement[] = [
 
     <StackLayout key="layout-algebra-check-working" maxWidth="xl">
         <Block id="algebra-check-working" padding="lg">
-            <FormulaBlock latex="3x + 12 = 0 \quad\Rightarrow\quad 3x = -12 \quad\Rightarrow\quad x = -4" />
+            <FormulaBlock
+                latex="3\clr{input}{x} + 12 = 0 \quad\Rightarrow\quad 3\clr{input}{x} = \choice{answerWorkingStep} \quad\Rightarrow\quad \clr{root}{x = -4}"
+                colorMap={{ input: "#F7B23B", root: "#8E90F5" }}
+                clozeChoices={{
+                    answerWorkingStep: {
+                        correctAnswer: "-12",
+                        options: ["12", "-12", "-4"],
+                        placeholder: "???",
+                        color: "#8E90F5",
+                        bgColor: "rgba(142, 144, 245, 0.18)",
+                    },
+                }}
+            />
         </Block>
     </StackLayout>,
 
     <StackLayout key="layout-algebra-check-practice-solve" maxWidth="xl">
         <Block id="algebra-check-practice-solve" padding="sm">
             <EditableParagraph id="para-algebra-check-practice-solve" blockId="algebra-check-practice-solve">
-                Now try the same two moves on a different line. The graph of 5x - 20
+                Now try the same two moves on a different line. The graph of{" "}
+                <InlineFormula
+                    id="formula-algebra-check-solve-expression"
+                    latex="5\clr{input}{x} - 20"
+                    colorMap={{ input: "#F7B23B" }}
+                />{" "}
                 meets zero at x ={" "}
                 <InlineFeedback
                     varName="answerSolveFiveX"

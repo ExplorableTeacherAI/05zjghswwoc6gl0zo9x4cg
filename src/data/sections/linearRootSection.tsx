@@ -6,6 +6,8 @@ import {
     EditableParagraph,
     InlineScrubbleNumber,
     InlineLinkedHighlight,
+    InlineFormula,
+    InlineTooltip,
     InlineClozeInput,
     InlineClozeChoice,
     InlineFeedback,
@@ -32,6 +34,7 @@ import {
     PLOT_RIGHT,
     PLOT_TOP,
     PlotAxes,
+    RATE_HUE,
     VIEW_HEIGHT,
     VIEW_WIDTH,
     fmt1,
@@ -52,14 +55,20 @@ const TILT_HANDLE_X = 5; // seconds — where the tilt handle rides the line
 
 const scale = makeScale({ xMin: -3, xMax: 8, yMin: -9, yMax: 7 });
 
-/** "-2x + 6 = 0" — the equation the picture is showing, in ordinary notation. */
-function equationText(rate: number, start: number): string {
+/**
+ * "-2x + 6 = 0" — the equation the picture is showing, in ordinary notation,
+ * split into its terms so each one can carry the colour of the handle that sets it.
+ */
+function equationParts(rate: number, start: number): { gradient: string; sign: string; constant: string } {
     const gradient =
         rate === 1 ? "x" : rate === -1 ? "-x" : `${Number.isInteger(rate) ? rate : rate.toFixed(1)}x`;
-    if (start === 0) return `${gradient} = 0`;
-    const sign = start < 0 ? "-" : "+";
+    if (start === 0) return { gradient, sign: "", constant: "" };
     const size = Math.abs(start);
-    return `${gradient} ${sign} ${Number.isInteger(size) ? size : size.toFixed(1)} = 0`;
+    return {
+        gradient,
+        sign: start < 0 ? " - " : " + ",
+        constant: `${Number.isInteger(size) ? size : size.toFixed(1)}`,
+    };
 }
 
 // ── The bespoke drawing ──────────────────────────────────────────────────────
@@ -75,6 +84,7 @@ function DroneLineDrawing() {
 
     const rootActive = highlight === "root";
     const dim = highlight && !rootActive ? 0.38 : 1;
+    const equation = equationParts(rate, start);
 
     const hasRoot = Math.abs(rate) > 1e-9;
     const rootX = hasRoot ? -start / rate : NaN;
@@ -145,7 +155,10 @@ function DroneLineDrawing() {
             {/* Readouts, above the drawing surface, never over the plot */}
             <g fontSize="13" style={{ fontVariantNumeric: "tabular-nums" }}>
                 <text x="32" y="30" fill={INK} opacity={dim}>
-                    {equationText(rate, start)}
+                    <tspan fill={RATE_HUE} fontWeight="600">{equation.gradient}</tspan>
+                    <tspan>{equation.sign}</tspan>
+                    <tspan fill={ACCENT} fontWeight="600">{equation.constant}</tspan>
+                    <tspan>{" = 0"}</tspan>
                 </text>
                 <text x="528" y="30" fill={ANSWER} textAnchor="end" fontWeight="600">
                     {hasRoot ? `x = ${fmt1(rootX)}` : "never reaches 0"}
@@ -228,7 +241,7 @@ function DroneLineDrawing() {
                     cx={tiltHandle.x}
                     cy={tiltHandle.y}
                     r="9"
-                    fill={ACCENT}
+                    fill={RATE_HUE}
                     filter="url(#linear-root-handle-shadow)"
                 />
                 <circle cx={tiltHandle.x} cy={tiltHandle.y} r="22" fill="transparent" {...grabProps("tilt")} />
@@ -250,7 +263,7 @@ function DroneLineFigure() {
                 setVar("lineClimbRate", DEFAULT_RATE);
                 setVar("lineHighlight", "");
             }}
-            caption="The drone's height above the platform, second by second. Drag either teal dot and the indigo marker shows the moment the height is exactly zero."
+            caption="The drone's height above the platform, second by second. Drag the teal or rose dot and the indigo marker shows the moment the height is exactly zero."
         >
             <DroneLineDrawing />
             <InteractionHintSequence
@@ -293,8 +306,15 @@ export const linearRootSectionBlocks: ReactElement[] = [
                     {...numberPropsFromDefinition(getVariableInfo("lineStartHeight"))}
                     formatValue={(v) => `${v} m`}
                 />{" "}
-                and holds that rate. Drag either teal dot to change where the line
-                starts or how steeply it tilts, and watch the{" "}
+                and holds a rate of{" "}
+                <InlineScrubbleNumber
+                    id="scrubble-linear-root-climb-rate"
+                    varName="lineClimbRate"
+                    {...numberPropsFromDefinition(getVariableInfo("lineClimbRate"))}
+                    formatValue={(v) => `${v} m/s`}
+                />
+                . Drag the teal dot to change where the line starts or the rose dot to
+                change how steeply it tilts, and watch the{" "}
                 <InlineLinkedHighlight
                     varName="lineHighlight"
                     highlightId="root"
@@ -316,7 +336,16 @@ export const linearRootSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-linear-root-insight" maxWidth="xl">
         <Block id="linear-root-insight" padding="sm">
             <EditableParagraph id="para-linear-root-insight" blockId="linear-root-insight">
-                That crossing point is the solution. Whatever equation sits in the corner,
+                That crossing point is the{" "}
+                <InlineTooltip
+                    id="tooltip-linear-root-solution"
+                    tooltip="A solution is a value of x that makes the equation true. Here it is the moment the height equals zero."
+                    color="#64748B"
+                    bgColor="rgba(100, 116, 139, 0.14)"
+                >
+                    solution
+                </InlineTooltip>
+                . Whatever equation sits in the corner,
                 the x value where the line meets zero is the answer to it, and a sloping
                 straight line can only ever meet zero in one place.
             </EditableParagraph>
@@ -327,7 +356,13 @@ export const linearRootSectionBlocks: ReactElement[] = [
         <Block id="linear-root-practice-read" padding="sm">
             <EditableParagraph id="para-linear-root-practice-read" blockId="linear-root-practice-read">
                 A second drone starts 4 m up and sinks 1 m every second, so its height
-                follows -x + 4. It is level with the platform when x ={" "}
+                follows{" "}
+                <InlineFormula
+                    id="formula-linear-root-second-drone"
+                    latex="\clr{rate}{-x} + \clr{start}{4}"
+                    colorMap={{ rate: "#F8A0CD", start: "#62D0AD" }}
+                />
+                . It is level with the platform when x ={" "}
                 <InlineFeedback
                     varName="answerLineRoot"
                     correctValue={["4", "x = 4"]}
@@ -343,7 +378,7 @@ export const linearRootSectionBlocks: ReactElement[] = [
                         steps: [
                             {
                                 gesture: "drag-vertical",
-                                label: "Drag the right-hand teal dot up until the drone sinks just 1 m each second",
+                                label: "Drag the right-hand rose dot up until the drone sinks just 1 m each second",
                                 position: { x: "71%", y: "78%" },
                                 completionVar: "lineClimbRate",
                                 completionValue: -1,

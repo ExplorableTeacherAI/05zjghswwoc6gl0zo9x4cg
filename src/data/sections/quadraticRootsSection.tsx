@@ -5,6 +5,9 @@ import {
     EditableH2,
     EditableParagraph,
     InlineLinkedHighlight,
+    InlineFormula,
+    InlineTooltip,
+    InlineTrigger,
     InlineClozeInput,
     InlineClozeChoice,
     InlineFeedback,
@@ -22,6 +25,7 @@ import {
 import {
     ACCENT,
     ANSWER,
+    CURVE_HUE,
     HandleShadow,
     INK,
     INK_STRUCTURE,
@@ -50,15 +54,15 @@ const VERTEX_Y_MAX = 4;
 const scale = makeScale({ xMin: -3, xMax: 8, yMin: -9, yMax: 7 });
 
 /** The curve itself is drawn in a soft red, distinct from the teal drag handle. */
-const CURVE = "#ef4444";
+const CURVE = CURVE_HUE;
 
 /** Vertex form (x - h)^2 + k written out as x^2 + bx + c = 0. */
-function expandedEquation(h: number, k: number): string {
+function expandedExpression(h: number, k: number): string {
     const b = -2 * h;
     const c = h * h + k;
     const bTerm = b === 0 ? "" : ` ${b < 0 ? "-" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}x`;
     const cTerm = c === 0 ? "" : ` ${c < 0 ? "-" : "+"} ${Math.abs(c)}`;
-    return `x² ${bTerm}${cTerm} = 0`.replace("x²  ", "x² ");
+    return `x²${bTerm}${cTerm}`;
 }
 
 function rootsOf(h: number, k: number): number[] {
@@ -123,7 +127,8 @@ function ParabolaDrawing() {
 
             <g fontSize="13" style={{ fontVariantNumeric: "tabular-nums" }}>
                 <text x="32" y="30" fill={INK} opacity={dim}>
-                    {expandedEquation(h, k)}
+                    <tspan fill={CURVE} fontWeight="600">{expandedExpression(h, k)}</tspan>
+                    <tspan>{" = 0"}</tspan>
                 </text>
                 <text x="528" y="30" fill={ANSWER} textAnchor="end" fontWeight="600">
                     {countLabel}
@@ -285,10 +290,45 @@ export const quadraticRootsSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-quadratic-roots-insight" maxWidth="xl">
         <Block id="quadratic-roots-insight" padding="sm">
             <EditableParagraph id="para-quadratic-roots-insight" blockId="quadratic-roots-insight">
-                Sink the lowest point below the platform and the drone passes zero twice,
-                once going down and once coming back. Lift it above and the drone never
-                gets there at all. A quadratic equation can therefore have two solutions,
-                one, or none.
+                <InlineTrigger
+                    id="trigger-quadratic-roots-sink-below"
+                    varName="vertexY"
+                    value={-4}
+                    color="#62D0AD"
+                    bgColor="rgba(98, 208, 173, 0.15)"
+                >
+                    Sink the lowest point below the platform
+                </InlineTrigger>{" "}
+                and the drone passes zero twice, once going down and once coming back.{" "}
+                <InlineTrigger
+                    id="trigger-quadratic-roots-lift-above"
+                    varName="vertexY"
+                    value={2}
+                    color="#62D0AD"
+                    bgColor="rgba(98, 208, 173, 0.15)"
+                >
+                    Lift it above
+                </InlineTrigger>{" "}
+                and the drone never gets there at all. A{" "}
+                <InlineTooltip
+                    id="tooltip-quadratic-roots-quadratic-equation"
+                    tooltip="A quadratic equation has x squared as its highest power, and its graph is a U-shaped curve."
+                    color="#64748B"
+                    bgColor="rgba(100, 116, 139, 0.14)"
+                >
+                    quadratic equation
+                </InlineTooltip>{" "}
+                can therefore have two solutions,{" "}
+                <InlineTrigger
+                    id="trigger-quadratic-roots-rest-on-zero"
+                    varName="vertexY"
+                    value={0}
+                    color="#62D0AD"
+                    bgColor="rgba(98, 208, 173, 0.15)"
+                >
+                    one
+                </InlineTrigger>
+                , or none.
             </EditableParagraph>
         </Block>
     </StackLayout>,
@@ -319,8 +359,19 @@ export const quadraticRootsSectionBlocks: ReactElement[] = [
     <StackLayout key="layout-quadratic-roots-practice-symmetry" maxWidth="xl">
         <Block id="quadratic-roots-practice-symmetry" padding="sm">
             <EditableParagraph id="para-quadratic-roots-practice-symmetry" blockId="quadratic-roots-practice-symmetry">
-                A different flight has its lowest point at x = 4, and one of its
-                solutions is x = 2. Because the curve is perfectly symmetrical about its
+                A different flight has its lowest point at{" "}
+                <InlineFormula
+                    id="formula-quadratic-roots-symmetry-vertex"
+                    latex="\clr{vertex}{x = 4}"
+                    colorMap={{ vertex: "#62D0AD" }}
+                />
+                , and one of its solutions is{" "}
+                <InlineFormula
+                    id="formula-quadratic-roots-symmetry-root"
+                    latex="\clr{root}{x = 2}"
+                    colorMap={{ root: "#8E90F5" }}
+                />
+                . Because the curve is perfectly symmetrical about its
                 lowest point, the other solution is x ={" "}
                 <InlineFeedback
                     varName="answerOtherRoot"

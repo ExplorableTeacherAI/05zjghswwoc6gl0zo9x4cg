@@ -104,7 +104,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         min: -3,
         max: 3,
         step: 0.5,
-        color: '#62D0AD',
+        color: '#F8A0CD',
     },
     lineHighlight: {
         defaultValue: '',
@@ -145,15 +145,15 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         min: -8,
         max: 8,
         step: 0.5,
-        color: '#62D0AD',
+        color: '#F7B23B',
     },
     machineHighlight: {
         defaultValue: '',
         type: 'text',
         label: 'Machine figure highlight',
         description: 'Shared highlight key linking prose to the substitution machine',
-        color: '#8E90F5',
-        bgColor: 'rgba(142, 144, 245, 0.22)',
+        color: '#62D0AD',
+        bgColor: 'rgba(98, 208, 173, 0.22)',
     },
     answerMachineRoot: {
         defaultValue: '',
@@ -162,6 +162,16 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         description: 'Student answer for the solution of 3x + 12 = 0',
         placeholder: '???',
         correctAnswer: ['-4', '- 4', 'x = -4'],
+        color: '#8E90F5',
+    },
+    answerWorkingStep: {
+        defaultValue: '',
+        type: 'select',
+        label: 'Working middle step answer',
+        description: 'Student choice for what 3x equals once 12 is taken off both sides',
+        placeholder: '???',
+        correctAnswer: '-12',
+        options: ['12', '-12', '-4'],
         color: '#8E90F5',
     },
     answerSolveFiveX: {
@@ -237,7 +247,7 @@ export const variableDefinitions: Record<string, VariableDefinition> = {
         min: -2.6,
         max: 4.6,
         step: 0.1,
-        color: '#62D0AD',
+        color: '#F7B23B',
     },
     foundRootLeft: {
         defaultValue: false,
